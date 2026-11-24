@@ -21,7 +21,8 @@ module.exports = {
       "method": "shell.run",
       "params": {
         message: [
-          "git clone {{platform === 'darwin' ? 'https://github.com/Tencent/Hunyuan3D-2' : 'https://github.com/SkyDev-Devision/Hunyuan3D-2GP.git'}} app"
+          "echo \"=== [1/6] Клонирование репозитория приложения ===\"",
+          "git clone {{platform === 'darwin' ? 'https://github.com/Tencent/Hunyuan3D-2' : 'https://github.com/SkyDev-Devision/Hunyuan3D-2GP.git'}} app && echo \"=== [1/6] ✅ УСПЕШНО: репозиторий склонирован ===\" || echo \"=== [1/6] ❌ ОШИБКА: не удалось склонировать репозиторий ===\""
         ]
       },
       on: [
@@ -50,7 +51,8 @@ module.exports = {
       "method": "shell.run",
       "params": {
         message: [
-          "git pull || true"
+          "echo \"=== [1/6] Обновление репозитория приложения ===\"",
+          "cd app && git pull || true && echo \"=== [1/6] ✅ УСПЕШНО: репозиторий обновлён ===\" || echo \"=== [1/6] ⚠️ ПРЕДУПРЕЖДЕНИЕ: git pull не удался, продолжаем ===\""
         ],
         path: "app"
       }
@@ -105,10 +107,12 @@ module.exports = {
         venv: "env",
         path: "app",
         message: [
-          "uv pip install -r requirements.txt",
-          "uv pip install sentencepiece diffusers==0.33.0 gradio==5.50 huggingface_hub[hf-xet]==0.36.2",
-          "uv pip install --no-build-isolation diso==0.1.4",
-          "uv pip install ../wheels/mesh_processor-0.0.0-cp310-cp310-win_amd64.whl"
+          "echo \"=== [3/6] Установка пакетов Windows + NVIDIA ===\"",
+          "uv pip install -r requirements.txt && echo \"   ✅ requirements.txt установлен\" || echo \"   ❌ ОШИБКА: requirements.txt\"",
+          "uv pip install sentencepiece diffusers==0.33.0 gradio==5.50 huggingface_hub[hf-xet]==0.36.2 && echo \"   ✅ sentencepiece/diffusers/gradio/huggingface_hub установлены\" || echo \"   ❌ ОШИБКА: sentencepiece/diffusers/gradio/huggingface_hub\"",
+          "uv pip install --no-build-isolation diso==0.1.4 && echo \"   ✅ diso==0.1.4 установлен\" || echo \"   ❌ ОШИБКА: diso==0.1.4\"",
+          "uv pip install ../wheels/mesh_processor-0.0.0-cp310-cp310-win_amd64.whl && echo \"   ✅ mesh_processor установлен\" || echo \"   ❌ ОШИБКА: mesh_processor\"",
+          "echo \"=== [3/6] ✅ УСПЕШНО: пакеты Windows + NVIDIA установлены ===\" || echo \"=== [3/6] ❌ ОШИБКА: пакеты Windows + NVIDIA ===\""
         ]
       },
       on: [
@@ -145,7 +149,8 @@ module.exports = {
         venv: "../../../env",
         path: "app/hy3dgen/texgen/custom_rasterizer",
         message: [
-          "python setup.py install"
+          "echo \"=== [4/6] Сборка custom_rasterizer из исходников ===\"",
+          "python setup.py install && echo \"=== [4/6] ✅ УСПЕШНО: custom_rasterizer собран и установлен ===\" || echo \"=== [4/6] ❌ ОШИБКА: не удалось собрать custom_rasterizer ===\""
         ]
       },
       on: [
@@ -182,11 +187,13 @@ module.exports = {
         venv: "env",
         path: "app",
         message: [
-          "uv pip install setuptools==65.5.0 wheel",
-          "{{gpu === 'nvidia' ? 'uv pip install --no-build-isolation diso==0.1.4' : null}}",
-          "{{platform === 'darwin' ? 'uv pip install numba>0.60.0' : null}}",
-          "uv pip install -r requirements.txt",
-          "uv pip install sentencepiece diffusers==0.33.0 gradio==5.50 huggingface_hub[hf-xet]==0.36.2",
+          "echo \"=== [3/6] Установка общих Python-зависимостей ===\"",
+          "uv pip install setuptools==65.5.0 wheel && echo \"   ✅ setuptools/wheel установлены\" || echo \"   ❌ ОШИБКА: setuptools/wheel\"",
+          "{{gpu === 'nvidia' ? 'uv pip install --no-build-isolation diso==0.1.4 && echo \"   ✅ diso==0.1.4 установлен\" || echo \"   ❌ ОШИБКА: diso==0.1.4\"' : 'echo \"   ⏭️ дисо пропущен (не NVIDIA GPU)\"'}}",
+          "{{platform === 'darwin' ? 'uv pip install numba>0.60.0 && echo \"   ✅ numba установлен\" || echo \"   ❌ ОШИБКА: numba\"' : 'echo \"   ⏭️ numba пропущен (не macOS)\"'}}",
+          "uv pip install -r requirements.txt && echo \"   ✅ requirements.txt установлен\" || echo \"   ❌ ОШИБКА: requirements.txt\"",
+          "uv pip install sentencepiece diffusers==0.33.0 gradio==5.50 huggingface_hub[hf-xet]==0.36.2 && echo \"   ✅ sentencepiece/diffusers/gradio/huggingface_hub установлены\" || echo \"   ❌ ОШИБКА: sentencepiece/diffusers/gradio/huggingface_hub\"",
+          "echo \"=== [3/6] ✅ УСПЕШНО: общие Python-зависимости установлены ===\" || echo \"=== [3/6] ❌ ОШИБКА: общие Python-зависимости ===\""
         ]
       },
       on: [
@@ -215,8 +222,10 @@ module.exports = {
       method: "shell.run",
       "params": {
         message: [
-          "conda install -y -c conda-forge 'gxx<12'",
-          "which g++"
+          "echo \"=== [5/6] Установка g++ <12 для Linux ===\"",
+          "conda install -y -c conda-forge 'gxx<12' && echo \"   ✅ g++ <12 установлен\" || echo \"   ❌ ОШИБКА: g++ <12\"",
+          "which g++ && echo \"   ✅ g++ найден в PATH\" || echo \"   ❌ ОШИБКА: g++ не найден\"",
+          "echo \"=== [5/6] ✅ УСПЕШНО: g++ установлен ===\" || echo \"=== [5/6] ❌ ОШИБКА: g++ ===\""
         ]
       },
       on: [
@@ -254,7 +263,8 @@ module.exports = {
         },
         path: "app/hy3dgen/texgen/custom_rasterizer",
         message: [
-          "python setup.py install"
+          "echo \"=== [6/6] Сборка custom_rasterizer для Linux ===\"",
+          "python setup.py install && echo \"   ✅ custom_rasterizer собран\" || echo \"   ❌ ОШИБКА: custom_rasterizer\""
         ]
       },
       on: [
@@ -278,7 +288,9 @@ module.exports = {
         },
         path: "app/hy3dgen/texgen/differentiable_renderer",
         message: [
-          "python setup.py install"
+          "echo \"=== [6/6] Сборка differentiable_renderer для Linux ===\"",
+          "python setup.py install && echo \"   ✅ differentiable_renderer собран\" || echo \"   ❌ ОШИБКА: differentiable_renderer\"",
+          "echo \"=== [6/6] ✅ УСПЕШНО: custom_rasterizer и differentiable_renderer собраны ===\" || echo \"=== [6/6] ❌ ОШИБКА: сборка компонентов Linux ===\""
         ]
       },
       on: [
