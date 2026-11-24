@@ -20,10 +20,7 @@ module.exports = {
       "when": "{{!exists('app')}}",
       "method": "shell.run",
       "params": {
-        message: [
-          "echo \"=== [1/6] Клонирование репозитория приложения ===\"",
-          "git clone {{platform === 'darwin' ? 'https://github.com/Tencent/Hunyuan3D-2' : 'https://github.com/SkyDev-Devision/Hunyuan3D-2GP.git'}} app && echo \"=== [1/6] ✅ УСПЕШНО: репозиторий склонирован ===\" || echo \"=== [1/6] ❌ ОШИБКА: не удалось склонировать репозиторий ===\""
-        ]
+        message: "echo \"=== [1/6] Клонирование репозитория приложения ===\" & git clone {{platform === 'darwin' ? 'https://github.com/Tencent/Hunyuan3D-2' : 'https://github.com/SkyDev-Devision/Hunyuan3D-2GP.git'}} app & echo \"=== [1/6] ✅ Репозиторий приложения склонирован ===\" || echo \"=== [1/6] ❌ ОШИБКА: не удалось склонировать репозиторий ===\""
       }
     },
     {
@@ -37,10 +34,7 @@ module.exports = {
       "when": "{{exists('app')}}",
       "method": "shell.run",
       "params": {
-        message: [
-          "echo \"=== [1/6] Обновление репозитория приложения ===\"",
-          "git pull && echo \"=== [1/6] ✅ УСПЕШНО: репозиторий обновлён ===\" || echo \"=== [1/6] ⚠️ ПРЕДУПРЕЖДЕНИЕ: git pull не удался, продолжаем ===\""
-        ],
+        message: "echo \"=== [1/6] Обновление репозитория приложения ===\" & git pull && echo \"=== [1/6] ✅ Репозиторий приложения обновлён ===\" || echo \"=== [1/6] ⚠️ ПРЕДУПРЕЖДЕНИЕ: git pull не удался, продолжаем ===\"",
         path: "app"
       }
     },
@@ -71,7 +65,7 @@ module.exports = {
       when: "{{platform === 'win32' && gpu === 'nvidia'}}",
       method: "log",
       "params": {
-        message: "[3/6] Устанавливаем пакеты для Windows + NVIDIA (diso, mesh_processor)..."
+        message: "[3/6] Устанавливаем пакеты для Windows + NVIDIA..."
       }
     },
     {
@@ -86,13 +80,28 @@ module.exports = {
         },
         venv: "env",
         path: "app",
-        message: [
-          "echo \"=== [3/6] Установка пакетов Windows + NVIDIA ===\"",
-          "uv pip install -r requirements.txt && echo \"   ✅ requirements.txt установлен\" || echo \"   ❌ ОШИБКА: requirements.txt\"",
-          "uv pip install sentencepiece diffusers==0.33.0 gradio==5.50 huggingface_hub[hf-xet]==0.36.2 && echo \"   ✅ sentencepiece/diffusers/gradio/huggingface_hub установлены\" || echo \"   ❌ ОШИБКА: sentencepiece/diffusers/gradio/huggingface_hub\"",
-          "uv pip install --no-build-isolation diso==0.1.4 && echo \"   ✅ diso==0.1.4 установлен\" || echo \"   ❌ ОШИБКА: diso==0.1.4\"",
-          "uv pip install ../wheels/mesh_processor-0.0.0-cp310-cp310-win_amd64.whl && echo \"   ✅ mesh_processor установлен\" || echo \"   ❌ ОШИБКА: mesh_processor\""
-        ]
+        message: "echo \"=== [3/6] Установка requirements.txt ===\" & uv pip install -r requirements.txt && echo \"   ✅ requirements.txt установлен\" || echo \"   ❌ ОШИБКА: requirements.txt\""
+      }
+    },
+    {
+      when: "{{platform === 'win32' && gpu === 'nvidia'}}",
+      method: "shell.run",
+      "params": {
+        message: "echo \"=== [3/6] Установка sentencepiece/diffusers/gradio/huggingface_hub ===\" & uv pip install sentencepiece diffusers==0.33.0 gradio==5.50 huggingface_hub[hf-xet]==0.36.2 && echo \"   ✅ sentencepiece/diffusers/gradio/huggingface_hub установлены\" || echo \"   ❌ ОШИБКА: sentencepiece/diffusers/gradio/huggingface_hub\""
+      }
+    },
+    {
+      when: "{{platform === 'win32' && gpu === 'nvidia'}}",
+      method: "shell.run",
+      "params": {
+        message: "echo \"=== [3/6] Установка diso==0.1.4 ===\" & uv pip install --no-build-isolation diso==0.1.4 && echo \"   ✅ diso==0.1.4 установлен\" || echo \"   ❌ ОШИБКА: diso==0.1.4\""
+      }
+    },
+    {
+      when: "{{platform === 'win32' && gpu === 'nvidia'}}",
+      method: "shell.run",
+      "params": {
+        message: "echo \"=== [3/6] Установка mesh_processor ===\" & uv pip install ../wheels/mesh_processor-0.0.0-cp310-cp310-win_amd64.whl && echo \"   ✅ mesh_processor установлен\" || echo \"   ❌ ОШИБКА: mesh_processor\""
       }
     },
     {
@@ -121,10 +130,7 @@ module.exports = {
         },
         venv: "../../../env",
         path: "app/hy3dgen/texgen/custom_rasterizer",
-        message: [
-          "echo \"=== [4/6] Сборка custom_rasterizer из исходников ===\"",
-          "python setup.py install && echo \"=== [4/6] ✅ УСПЕШНО: custom_rasterizer собран и установлен ===\" || echo \"=== [4/6] ❌ ОШИБКА: не удалось собрать custom_rasterizer ===\""
-        ]
+        message: "echo \"=== [4/6] Сборка custom_rasterizer из исходников ===\" & python setup.py install && echo \"=== [4/6] ✅ custom_rasterizer собран и установлен ===\" || echo \"=== [4/6] ❌ ОШИБКА: не удалось собрать custom_rasterizer ===\""
       }
     },
     {
@@ -138,7 +144,7 @@ module.exports = {
       when: "{{!(platform === 'win32' && gpu === 'nvidia')}}",
       method: "log",
       "params": {
-        message: "[3/6] Устанавливаем общие Python-зависимости (не Windows+NVIDIA)..."
+        message: "[3/6] Устанавливаем общие Python-зависимости..."
       }
     },
     {
@@ -153,14 +159,35 @@ module.exports = {
         },
         venv: "env",
         path: "app",
-        message: [
-          "echo \"=== [3/6] Установка общих Python-зависимостей ===\"",
-          "uv pip install setuptools==65.5.0 wheel && echo \"   ✅ setuptools/wheel установлены\" || echo \"   ❌ ОШИБКА: setuptools/wheel\"",
-          "{{gpu === 'nvidia' ? 'uv pip install --no-build-isolation diso==0.1.4 && echo \"   ✅ diso==0.1.4 установлен\" || echo \"   ❌ ОШИБКА: diso==0.1.4\"' : 'echo \"   ⏭️ дисо пропущен (не NVIDIA GPU)\"'}}",
-          "{{platform === 'darwin' ? 'uv pip install numba>0.60.0 && echo \"   ✅ numba установлен\" || echo \"   ❌ ОШИБКА: numba\"' : 'echo \"   ⏭️ numba пропущен (не macOS)\"'}}",
-          "uv pip install -r requirements.txt && echo \"   ✅ requirements.txt установлен\" || echo \"   ❌ ОШИБКА: requirements.txt\"",
-          "uv pip install sentencepiece diffusers==0.33.0 gradio==5.50 huggingface_hub[hf-xet]==0.36.2 && echo \"   ✅ sentencepiece/diffusers/gradio/huggingface_hub установлены\" || echo \"   ❌ ОШИБКА: sentencepiece/diffusers/gradio/huggingface_hub\""
-        ]
+        message: "echo \"=== [3/6] Установка setuptools/wheel ===\" & uv pip install setuptools==65.5.0 wheel && echo \"   ✅ setuptools/wheel установлены\" || echo \"   ❌ ОШИБКА: setuptools/wheel\""
+      }
+    },
+    {
+      when: "{{!(platform === 'win32' && gpu === 'nvidia')}}",
+      method: "shell.run",
+      "params": {
+        message: "echo \"=== [3/6] Установка diso==0.1.4 (если NVIDIA) ===\" & {{gpu === 'nvidia' ? 'uv pip install --no-build-isolation diso==0.1.4' : 'echo \"   ⏭️ дисо пропущен (не NVIDIA GPU)\"'}} & echo \"=== [3/6] diso выполнено ===\""
+      }
+    },
+    {
+      when: "{{!(platform === 'win32' && gpu === 'nvidia')}}",
+      method: "shell.run",
+      "params": {
+        message: "echo \"=== [3/6] Установка numba (если macOS) ===\" & {{platform === 'darwin' ? 'uv pip install numba>0.60.0' : 'echo \"   ⏭️ numba пропущен (не macOS)\"'}} & echo \"=== [3/6] numba выполнено ===\""
+      }
+    },
+    {
+      when: "{{!(platform === 'win32' && gpu === 'nvidia')}}",
+      method: "shell.run",
+      "params": {
+        message: "echo \"=== [3/6] Установка requirements.txt ===\" & uv pip install -r requirements.txt && echo \"   ✅ requirements.txt установлен\" || echo \"   ❌ ОШИБКА: requirements.txt\""
+      }
+    },
+    {
+      when: "{{!(platform === 'win32' && gpu === 'nvidia')}}",
+      method: "shell.run",
+      "params": {
+        message: "echo \"=== [3/6] Установка sentencepiece/diffusers/gradio/huggingface_hub ===\" & uv pip install sentencepiece diffusers==0.33.0 gradio==5.50 huggingface_hub[hf-xet]==0.36.2 && echo \"   ✅ sentencepiece/diffusers/gradio/huggingface_hub установлены\" || echo \"   ❌ ОШИБКА: sentencepiece/diffusers/gradio/huggingface_hub\""
       }
     },
     {
@@ -172,7 +199,7 @@ module.exports = {
     },
     {
       when: "{{platform === 'linux'}}",
-      "method": "log",
+      method: "log",
       "params": {
         message: "[5/6] Устанавливаем g++ <12 для Linux..."
       }
@@ -181,11 +208,7 @@ module.exports = {
       when: "{{platform === 'linux'}}",
       method: "shell.run",
       "params": {
-        message: [
-          "echo \"=== [5/6] Установка g++ <12 для Linux ===\"",
-          "conda install -y -c conda-forge 'gxx<12' && echo \"   ✅ g++ <12 установлен\" || echo \"   ❌ ОШИБКА: g++ <12\"",
-          "which g++ && echo \"   ✅ g++ найден в PATH\" || echo \"   ❌ ОШИБКА: g++ не найден\""
-        ]
+        message: "echo \"=== [5/6] Установка g++ <12 для Linux ===\" & conda install -y -c conda-forge 'gxx<12' && echo \"   ✅ g++ <12 установлен\" || echo \"   ❌ ОШИБКА: g++ <12\" & which g++ && echo \"   ✅ g++ найден в PATH\" || echo \"   ❌ ОШИБКА: g++ не найден\""
       }
     },
     {
@@ -215,10 +238,7 @@ module.exports = {
           TORCH_CUDA_ARCH_LIST: "6.1;7.5;8.6;8.9;12.0"
         },
         path: "app/hy3dgen/texgen/custom_rasterizer",
-        message: [
-          "echo \"=== [6/6] Сборка custom_rasterizer для Linux ===\"",
-          "python setup.py install && echo \"   ✅ custom_rasterizer собран\" || echo \"   ❌ ОШИБКА: custom_rasterizer\""
-        ]
+        message: "echo \"=== [6/6] Сборка custom_rasterizer для Linux ===\" & python setup.py install && echo \"   ✅ custom_rasterizer собран\" || echo \"   ❌ ОШИБКА: custom_rasterizer\""
       }
     },
     {
@@ -234,10 +254,7 @@ module.exports = {
           TORCH_CUDA_ARCH_LIST: "6.1;7.5;8.6;8.9;12.0"
         },
         path: "app/hy3dgen/texgen/differentiable_renderer",
-        message: [
-          "echo \"=== [6/6] Сборка differentiable_renderer для Linux ===\"",
-          "python setup.py install && echo \"   ✅ differentiable_renderer собран\" || echo \"   ❌ ОШИБКА: differentiable_renderer\""
-        ]
+        message: "echo \"=== [6/6] Сборка differentiable_renderer для Linux ===\" & python setup.py install && echo \"   ✅ differentiable_renderer собран\" || echo \"   ❌ ОШИБКА: differentiable_renderer\""
       }
     },
     {
