@@ -7,7 +7,7 @@ module.exports = {
       "params": {
         "venv": "{{args && args.venv ? args.venv : null}}",
         "path": "{{args && args.path ? args.path : '.'}}",
-        "message": "uv pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 {{args && args.xformers ? 'xformers' : ''}} --index-url https://download.pytorch.org/whl/cu121 --force-reinstall --no-deps"
+        "message": "uv pip install torch==2.7.0+cu126 torchvision==0.22.0+cu126 torchaudio==2.7.0+cu126 {{args && args.xformers ? 'xformers' : ''}} --index-url https://download.pytorch.org/whl/cu126 --force-reinstall --no-deps"
       }
     },
     // windows amd
@@ -50,7 +50,7 @@ module.exports = {
         "env": { "UV_HTTP_TIMEOUT": "60" },
         "venv": "{{args && args.venv ? args.venv : null}}",
         "path": "{{args && args.path ? args.path : '.'}}",
-        "message": "uv pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 {{args && args.xformers ? 'xformers' : ''}} --index-url https://download.pytorch.org/whl/cu121 --force-reinstall"
+        "message": "uv pip install torch==2.7.0+cu126 torchvision==0.22.0+cu126 torchaudio==2.7.0+cu126 {{args && args.xformers ? 'xformers' : ''}} --index-url https://download.pytorch.org/whl/cu126 --force-reinstall"
       }
     },
     // linux rocm (amd)

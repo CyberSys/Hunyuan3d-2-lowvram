@@ -41,7 +41,6 @@ module.exports = {
         venv: "env",
         path: "app",
         message: [
-          "uv pip install ../wheels/diso-0.1.4-cp310-cp310-win_amd64.whl",
           "uv pip install -r requirements.txt",
           "uv pip install sentencepiece diffusers==0.33.0 gradio==5.50 huggingface_hub[hf-xet]==0.36.2",
           "uv pip install ../wheels/custom_rasterizer-0.1-cp310-cp310-win_amd64.whl",
