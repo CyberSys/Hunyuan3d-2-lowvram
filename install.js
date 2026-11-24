@@ -49,11 +49,27 @@ module.exports = {
           "uv pip install -r requirements.txt",
           "uv pip install sentencepiece diffusers==0.33.0 gradio==5.50 huggingface_hub[hf-xet]==0.36.2",
           "uv pip install --no-build-isolation diso==0.1.4",
-          "uv pip install ../wheels/custom_rasterizer-0.1-cp310-cp310-win_amd64.whl",
           "uv pip install ../wheels/mesh_processor-0.0.0-cp310-cp310-win_amd64.whl"
         ]
       },
         next: null
+    },
+    {
+      when: "{{platform === 'win32' && gpu === 'nvidia'}}",
+      method: "shell.run",
+      params: {
+        build: true,
+        env: {
+          USE_NINJA: 0,
+          DISTUTILS_USE_SDK: 1,
+          TORCH_CUDA_ARCH_LIST: "6.1;7.5;8.6;8.9;12.0"
+        },
+        venv: "../../../env",
+        path: "app/hy3dgen/texgen/custom_rasterizer",
+        message: [
+          "python setup.py install"
+        ]
+      }
     },
     {
       method: "shell.run",
